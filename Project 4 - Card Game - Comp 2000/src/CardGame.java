@@ -51,19 +51,140 @@ public class CardGame {
 			System.out.printf("Please enter a name for player #%d%n", i);
 			players.add(new Player(in.nextLine()));
 		}
-		
 		//Adds the "House", depending on the game.
-		//players.add(new Player("House"));
+		players.add(new Player("House"));
 		
+		/*
+		 * Used to test if aces are being calculated properly.
+		 * System.out.printf("%nAce Test?(Enter y or n)%n");
+		String answer = "";
+		do {
+			answer = in.next();
+			if(!answer.equals("y") && !answer.equals("n")) {
+				System.out.printf("Please enter a valid answer.%n");
+			}else if(answer.equals("y")){
+				for(Player p: players) {
+					for(Suite s: Suite.values()) {
+						if(deck.remove(new Card(s, Rank.ACE))) {
+							p.getHand().add(new Card(s, Rank.ACE));
+							break;
+						}
+					}
+				}
+			}
+		}while(!answer.equals("y") && !answer.equals("n"));
+		 */
+		
+		
+		deck.Shuffle();
+		deck.Shuffle();
+		
+	}
+	
+	public static void hit(Player player) {
+		player.draw(deck);
+	}
+	
+	public static void calculateScore(Player player) {
+		int score = 0;
+		ArrayList<Card> aces = new ArrayList<Card>();
+		for(Card c: player.getHand().toArray()) {
+			if(c.getRank() == Rank.ACE) {
+				aces.add(c);
+			}else {
+				score += c.getRank().getValue(false);
+			}
+		}
+		
+		for(Card c: aces) {
+			score += c.getRank().getValue((score + 11 <= 21));
+		}
+		player.setScore(score);
 	}
 	
 	//Starts the actual game.
 	public static void play() {
-		deck.Shuffle();
-		System.out.printf("%d%n", deck.getNumCards());
-		deck.deal(players, 26);
-		System.out.printf("%d%n", deck.getLength());
-		System.out.printf("%b%n", deck.isEmpty());
+		Scanner in = new Scanner(System.in);
+		deck.deal(players, 2);
+		int standCount = 0;
+		while (standCount < players.size()) {
+			for(Player p: players) {
+				calculateScore(p);
+				if(!p.isStand()) {
+					if(p.getName().equals("House")) {
+						if(!(p.getScore() >= 17)) {
+							System.out.printf("The House hits.%n%n");
+							hit(p);
+						}else {
+							System.out.printf("The House stands.%n%n");
+							p.setStand(true);
+						}
+					}else {
+						System.out.printf("%s, would you like to hit or stand?%n", p.getName());
+						System.out.printf("Your current score is %d%n", p.getScore());
+						String input = "";
+						do {
+							input = in.nextLine();
+							if(!input.toLowerCase().equals("hit") && !input.toLowerCase().equals("stand")) {
+								System.out.printf("Please enter a valid answer(Either \"hit\" or \"stand\")%n");
+							}
+						}while(!input.toLowerCase().equals("hit") && !input.toLowerCase().equals("stand"));
+						
+							if(input.toLowerCase().equals("hit")) {
+								System.out.printf("%s hits%n%n", p.getName());
+								hit(p);
+							}else {
+								System.out.printf("%s stands%n%n", p.getName());
+								p.setStand(true);
+							}
+					}
+					standCount = 0;
+				}else {
+					standCount++;
+				}
+			}
+		}
+		results();
+	}
+	
+	public static void results() {
+		Scanner in = new Scanner(System.in);
+		System.out.printf("%nHere are the results!%n");
+		Player winner = null;
+		for(Player p: players) {
+			calculateScore(p);
+			if(p.getScore() < 21) {
+				if(winner == null || winner.getScore() < p.getScore()) {
+					winner = p;
+				}
+			}
+		}
+		System.out.printf("The winner(s) are...%n");
+		if(winner == null) {
+			System.out.printf("There were no winners :(%n");
+		}else {
+			for(Player p: players) {
+				if(p.getScore() == winner.getScore()) {
+					p.setWins(p.getWins() + 1);
+					System.out.printf("%n%s%nWith a hand of:%n%sWith a total score of: %d%n", p.getName(), p.getHand(), p.getScore());
+				}
+			}
+		}
+		System.out.printf("%nWould you like to play again?(Enter y or n)%n");
+		String answer = "";
+		do {
+			answer = in.next();
+			if(!answer.equals("y") && !answer.equals("n")) {
+				System.out.printf("Please enter a valid answer.%n");
+			}else if(answer.equals("y")){
+				initialize();
+				play();
+			}else {
+				System.out.printf("Ok Goodbye!%n");
+			}
+
+		}while(!answer.equals("y") && !answer.equals("n"));
+		in.close();
 	}
 	
 	

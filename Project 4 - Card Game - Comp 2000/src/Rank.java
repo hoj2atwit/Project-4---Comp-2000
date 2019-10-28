@@ -1,9 +1,35 @@
 public enum Rank {
-	ACE(0), TWO(1), THREE(2), FOUR(3), FIVE(4), SIX(5), SEVEN(6), EIGHT(7), NINE(8), TEN(9), JACK(10), QUEEN(11), KING(12);
+	ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING;
 	
-	public final int number;
-	
-	private Rank(int number) {
-		this.number = number;
+	public int getValue(boolean aceIsEleven) {
+		switch(this) {
+			case ACE:
+				if(aceIsEleven) {
+					return 11;
+				}
+				return 1;
+			case TWO:
+				return 2;
+			case THREE:
+				return 3;
+			case FOUR:
+				return 4;
+			case FIVE:
+				return 5;
+			case SIX:
+				return 6;
+			case SEVEN:
+				return 7;
+			case EIGHT:
+				return 8;
+			case NINE:
+				return 9;
+			case TEN:
+				return 10;
+			default:
+				return 11;
+		}
+			
+				
 	}
 }

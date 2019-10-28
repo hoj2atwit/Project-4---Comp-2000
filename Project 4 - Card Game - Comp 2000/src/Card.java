@@ -30,7 +30,7 @@ public class Card {
 	}
 	
 	public String toString() {
-		return String.format("%s, %s%n", rank, suite);
+		return String.format("%s of %s%n", rank, suite);
 	}
 
 }

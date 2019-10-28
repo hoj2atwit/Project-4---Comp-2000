@@ -8,7 +8,7 @@ public class Pile implements CardListInterface{
 	private Random random = new Random();
 	
 	public Pile() {
-		firstNode = null;
+		setFirstNode(null);
 		lastNode = null;
 		setNumCards(0);
 	}
@@ -28,7 +28,7 @@ public class Pile implements CardListInterface{
 		if (position < 0 || position >= getNumCards()) {
 			throw new IndexOutOfBoundsException();
 		}
-		DoubleNode<Card> temp = firstNode;
+		DoubleNode<Card> temp = getFirstNode();
 		for (int i = 0; i < position; i++) {
 			temp = temp.getNext();
 		}
@@ -42,7 +42,7 @@ public class Pile implements CardListInterface{
 	 */
 	public int search(Card card) {
 		int place = -1;
-		DoubleNode<Card> temp = firstNode;
+		DoubleNode<Card> temp = getFirstNode();
 		for (int i = 0; i < getNumCards(); i++) {
 			if (temp.getData().equals(card)) {
 				place = i;
@@ -71,14 +71,14 @@ public class Pile implements CardListInterface{
 		//	newPile.add(temp.getData());
 		//	return newPile;
 		//} else {
-			DoubleNode<Card> temp = firstNode;
+			DoubleNode<Card> temp = getFirstNode();
 			Pile newPile = new Pile();
 			for (int i = 0; i < secondPileSize; i++) {
 				newPile.addLast(temp.getData());
 				temp = temp.getNext();
 			}
-			firstNode = temp;
-			firstNode.setPrev(null);
+			setFirstNode(temp);
+			getFirstNode().setPrev(null);
 			setNumCards(getNumCards() - secondPileSize);
 			return newPile;
 		//}
@@ -128,14 +128,14 @@ public class Pile implements CardListInterface{
 		DoubleNode<Card> toPlace = new DoubleNode<Card>(card);
 		if (!contains(card)) {
 			if (isEmpty()) {
-				firstNode = toPlace;
-				lastNode = firstNode;
-				firstNode.setPrev(null);
+				setFirstNode(toPlace);
+				lastNode = getFirstNode();
+				getFirstNode().setPrev(null);
 				lastNode.setNext(null);
 			} else {
-				firstNode.setPrev(toPlace);
-				toPlace.setNext(firstNode);
-				firstNode = toPlace;
+				getFirstNode().setPrev(toPlace);
+				toPlace.setNext(getFirstNode());
+				setFirstNode(toPlace);
 			}
 			setNumCards(getNumCards() + 1);
 		} else {
@@ -154,9 +154,9 @@ public class Pile implements CardListInterface{
 		DoubleNode<Card> toPlace = new DoubleNode<Card>(card);
 		if (!contains(card)) {
 			if (isEmpty()) {
-				firstNode = toPlace;
-				lastNode = firstNode;
-				firstNode.setPrev(null);
+				setFirstNode(toPlace);
+				lastNode = getFirstNode();
+				getFirstNode().setPrev(null);
 				lastNode.setNext(null);
 			} else {
 				lastNode.setNext(toPlace);
@@ -175,7 +175,7 @@ public class Pile implements CardListInterface{
 	 */
 	@Override
 	public boolean remove(Card card) {
-		for (DoubleNode<Card> temp = firstNode; temp != null; temp = temp.getNext()) {
+		for (DoubleNode<Card> temp = getFirstNode(); temp != null; temp = temp.getNext()) {
 			if (temp.getData().equals(card)) {
 				temp.getPrev().setNext(temp.getNext());
 				if(temp.getNext() != null) {
@@ -197,7 +197,7 @@ public class Pile implements CardListInterface{
 		if (position < 0 || position > getNumCards() - 1) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
-		DoubleNode<Card> toRemove = firstNode;
+		DoubleNode<Card> toRemove = getFirstNode();
 		for (int i = 1; i < position; i++) {
 			toRemove = toRemove.getNext();
 		}
@@ -212,7 +212,7 @@ public class Pile implements CardListInterface{
 					if(toRemove.getNext() != null) {
 						toRemove.getNext().setPrev(null);
 					}
-					firstNode = toRemove.getNext();
+					setFirstNode(toRemove.getNext());
 				}
 		} else {
 			toRemove.getPrev().setNext(toRemove.getNext());
@@ -256,7 +256,7 @@ public class Pile implements CardListInterface{
 	 */
 	@Override
 	public boolean contains(Card card) {
-		for (DoubleNode<Card> temp = firstNode; temp != null; temp = temp.getNext()) {
+		for (DoubleNode<Card> temp = getFirstNode(); temp != null; temp = temp.getNext()) {
 			if (temp.getData().equals(card)) {
 				return true;
 			}
@@ -276,7 +276,7 @@ public class Pile implements CardListInterface{
 
 	public Card[] toArray() {
 		Card[] temp = new Card[getNumCards()];
-		DoubleNode<Card> tempNode = firstNode;
+		DoubleNode<Card> tempNode = getFirstNode();
 		for (int i = 0; i < getNumCards(); i++) {
 			temp[i] = tempNode.getData();
 			tempNode = tempNode.getNext();
@@ -285,7 +285,7 @@ public class Pile implements CardListInterface{
 	}
 	
 	public void clear() {
-		firstNode = null;
+		setFirstNode(null);
 		lastNode = null;
 		setNumCards(0);
 	}
@@ -318,5 +318,13 @@ public class Pile implements CardListInterface{
 
 	public void setNumCards(int numCards) {
 		this.numCards = numCards;
+	}
+
+	public DoubleNode<Card> getFirstNode() {
+		return firstNode;
+	}
+
+	public void setFirstNode(DoubleNode<Card> firstNode) {
+		this.firstNode = firstNode;
 	}
 }
