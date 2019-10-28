@@ -202,15 +202,18 @@ public class Pile implements CardListInterface{
 			toRemove = toRemove.getNext();
 		}
 		if (toRemove.getNext() == null || toRemove.getPrev() == null) {
-			if (toRemove.getNext() == null) {
-				lastNode = null;
-				
-			}
-			if (toRemove.getPrev() == null) {
-				toRemove.getNext().setPrev(null);
-				firstNode = toRemove.getNext();
-				
-			}
+				if (toRemove.getNext() == null) {
+					if(toRemove.getPrev() != null) {
+						toRemove.getPrev().setNext(null);
+					}
+					lastNode = toRemove.getPrev();
+				}
+				if (toRemove.getPrev() == null) {
+					if(toRemove.getNext() != null) {
+						toRemove.getNext().setPrev(null);
+					}
+					firstNode = toRemove.getNext();
+				}
 		} else {
 			toRemove.getPrev().setNext(toRemove.getNext());
 			toRemove.getNext().setPrev(toRemove.getPrev());
