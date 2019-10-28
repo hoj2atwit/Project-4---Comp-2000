@@ -1,8 +1,8 @@
 
 public class DoubleNode<T> {
 	private Card card;
-	private DoubleNode next;
-	private DoubleNode prev;
+	private DoubleNode<T> next;
+	private DoubleNode<T> prev;
 	
 	public DoubleNode (Card card) {
 		this.card = card;
@@ -18,23 +18,23 @@ public class DoubleNode<T> {
 		this.card = card;
 	}
 	
-	public DoubleNode getNext() {
+	public DoubleNode<T> getNext() {
 		return next;
 	}
 	
-	public DoubleNode getPrev() {
+	public DoubleNode<T> getPrev() {
 		return prev;
 	}
 	
-	public void setNext(DoubleNode nextNode) {
+	public void setNext(DoubleNode<T> nextNode) {
 		next = nextNode;
 	}
 	
-	public void setPrev(DoubleNode prevNode) {
+	public void setPrev(DoubleNode<T> prevNode) {
 		prev = prevNode;
 	}
 	
-	public DoubleNode copyData() {
-		return new DoubleNode(card);
+	public DoubleNode<T> copyData() {
+		return new DoubleNode<T>(card);
 	}
 }

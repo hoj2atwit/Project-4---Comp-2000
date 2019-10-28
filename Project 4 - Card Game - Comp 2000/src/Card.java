@@ -9,10 +9,9 @@ public class Card {
 		this.rank = Rank.valueOf(rank.toUpperCase());
 	}
 	
-	public String toString() {
-		String s = "";
-		s += suite + " " + rank;
-		return s;
+	public Card(Suite suite, Rank rank) {
+		this.suite = suite;
+		this.rank = rank;
 	}
 	
 	public Suite getSuite() {
@@ -30,5 +29,8 @@ public class Card {
 		return false;
 	}
 	
+	public String toString() {
+		return String.format("%s, %s%n", rank, suite);
+	}
 
 }
